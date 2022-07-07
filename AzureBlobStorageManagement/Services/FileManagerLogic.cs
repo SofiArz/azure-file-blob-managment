@@ -57,7 +57,7 @@ namespace AzureBlobStorageManagement.Services
 
                     // Update the source blob's properties.
                     sourceProperties = await sourceBlob.GetPropertiesAsync();
-
+              
                     if (sourceProperties.LeaseState == LeaseState.Leased)
                     {
                         // Break the lease on the source blob.
@@ -86,11 +86,9 @@ namespace AzureBlobStorageManagement.Services
             var target = container.GetBlobClient(newName);
 
             var copyStatus =  target.StartCopyFromUri(sourceBlob.Uri);
-         
-            while (!copyStatus.HasCompleted)
-                await Task.Delay(100);
 
-            await sourceBlob.DeleteAsync();
+            if(copyStatus.Id != String.Empty)
+              await sourceBlob.DeleteAsync();
 
         }
     }
